@@ -11,7 +11,7 @@ class Command(BaseCommand):
         # 1. Create Admin
         admin_exists = User.objects.filter(username='admin').exists() or User.objects.filter(email='admin@campusstay.com').exists()
         if not admin_exists:
-            admin_user = User.objects.create_user(
+            admin_user = User.objects.create_superuser(
                 username='admin',
                 email='admin@campusstay.com',
                 role='ADMIN',
