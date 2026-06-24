@@ -33,8 +33,8 @@ class Command(BaseCommand):
 
         # 3. Create Rooms
         rooms_to_create = [
-            {'room_number': '301', 'block': 'Block A', 'room_type': 'FOUR', 'capacity': 4},
-            {'room_number': '201', 'block': 'Block A', 'room_type': 'TRIPLE', 'capacity': 3},
+            {'room_number': '301', 'block': 'Block A', 'room_type': 'FOUR', 'capacity': 4, 'floor_number': 3},
+            {'room_number': '201', 'block': 'Block A', 'room_type': 'TRIPLE', 'capacity': 3, 'floor_number': 2},
         ]
         for room_data in rooms_to_create:
             block = blocks[room_data['block']]
@@ -43,7 +43,8 @@ class Command(BaseCommand):
                 room_number=room_data['room_number'],
                 defaults={
                     'room_type': room_data['room_type'],
-                    'capacity': room_data['capacity']
+                    'capacity': room_data['capacity'],
+                    'floor_number': room_data['floor_number']
                 }
             )
             if created:
