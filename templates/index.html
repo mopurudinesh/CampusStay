@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to CampusStay – Smart Hostel Portal{% endblock %}
+
+{% block content %}
+<div class="row min-vh-80 align-items-center justify-content-center py-5 fade-in">
+    <div class="col-12 col-md-10 col-lg-8 text-center">
+        <h1 class="display-3 fw-bold mb-3">
+            Simplify Your <span class="gradient-text">Campus Stay</span> Experience
+        </h1>
+        <p class="lead text-secondary mb-5 px-md-5">
+            A state-of-the-art smart hostel registration and management portal. Experience secure room allocations, real-time maintenance boards, dynamic UPI payments, and interactive chatbot assistants.
+        </p>
+        
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+            <a href="{% url 'page_signup' %}" class="btn btn-lg btn-glass-primary">
+                <i class="fa-solid fa-user-plus me-2"></i> Register Now
+            </a>
+            <a href="{% url 'page_login' %}" class="btn btn-lg btn-outline-secondary px-4 text-theme-primary" style="border-radius: 8px;">
+                <i class="fa-solid fa-sign-in-alt me-2"></i> Access Account
+            </a>
+        </div>
+        
+        <div class="row g-4 mt-5 text-start">
+            <div class="col-12 col-md-6">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fa-solid fa-qrcode text-primary fs-3 me-3"></i>
+                        <h5 class="mb-0 fw-bold">QR Verification</h5>
+                    </div>
+                    <p class="text-secondary mb-0">
+                        Show a secure verification QR code on your student dashboard to verify your room assignment at any entry terminal instantly.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-6">
+                <div class="glass-card h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fa-solid fa-file-invoice-dollar text-primary fs-3 me-3"></i>
+                        <h5 class="mb-0 fw-bold">Digital Receipts</h5>
+                    </div>
+                    <p class="text-secondary mb-0">
+                        Pay hostel fees via UPI, debit card, or net banking. Generate and download official PDF payment receipts instantly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hide sidebar on index page
+    document.addEventListener("DOMContentLoaded", () => {
+        const sidebar = document.getElementById("sidebar-panel");
+        const main = document.getElementById("main-container");
+        if (sidebar) sidebar.classList.add("d-none");
+        if (main) main.className = "col-12 p-4 main-content";
+    });
+</script>
+{% endblock %}

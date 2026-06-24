@@ -1,0 +1,30 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Local Secrets
+.env
+
+# Local Database
+db.sqlite3
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Collected static files (Render compiles these automatically)
+staticfiles/
+
+# Uploaded Media (files uploaded locally during testing)
+media/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE configuration folders
+.vscode/
+.idea/

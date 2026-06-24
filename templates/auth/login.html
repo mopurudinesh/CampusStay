@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In – CampusStay{% endblock %}
+
+{% block content %}
+<div class="row align-items-center justify-content-center min-vh-80 py-5 slide-up">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="glass-card">
+            <h2 class="fw-bold mb-3 text-center">Welcome Back</h2>
+            <p class="text-secondary text-center mb-4">Access your CampusStay hostel dashboard</p>
+            
+            <form id="login-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Student ID / Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text border-end-0"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" class="form-control border-start-0" id="username" required placeholder="Enter Student ID or Username">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <label for="password" class="form-label mb-0">Password</label>
+                        <a href="{% url 'page_forgot_password' %}" class="text-xs text-primary text-decoration-none">Forgot Password?</a>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text border-end-0"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" class="form-control border-start-0 border-end-0" id="password" required placeholder="Enter password">
+                        <button class="btn border-start-0" type="button" id="toggle-password" style="border-left: none; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+                            <i class="fa-solid fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-glass-primary w-100 py-3 d-flex align-items-center justify-content-center" id="login-submit-btn">
+                    <span>Sign In</span>
+                    <div class="spinner-border spinner-border-sm text-light ms-2 d-none" id="login-spinner" role="status"></div>
+                </button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <span class="text-secondary">Don't have an account?</span>
+                <a href="{% url 'page_signup' %}" class="text-primary text-decoration-none fw-semibold ms-1">Register as Student</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Clear old auth elements if index routed here
+        localStorage.clear();
+        
+        // Hide sidebar
+        const sidebar = document.getElementById("sidebar-panel");
+        const main = document.getElementById("main-container");
+        if (sidebar) sidebar.classList.add("d-none");
+        if (main) main.className = "col-12 p-4 main-content";
+
+        const form = document.getElementById("login-form");
+        const submitBtn = document.getElementById("login-submit-btn");
+        const spinner = document.getElementById("login-spinner");
+
+        // Toggle password visibility
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("toggle-password");
+        const eyeIcon = document.getElementById("eye-icon");
+
+        if (togglePassword) {
+            togglePassword.addEventListener("click", () => {
+                const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", type);
+                eyeIcon.classList.toggle("fa-eye");
+                eyeIcon.classList.toggle("fa-eye-slash");
+            });
+        }
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            // UI Loading
+            submitBtn.disabled = true;
+            spinner.classList.remove("d-none");
+            
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch("/api/auth/login/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store tokens
+                    localStorage.setItem("token", data.access);
+                    localStorage.setItem("refresh", data.refresh);
+                    localStorage.setItem("role", data.role);
+                    localStorage.setItem("username", data.username);
+                    
+                    showToast("Login successful!", "success");
+                    
+                    setTimeout(() => {
+                        if (data.role === "ADMIN") {
+                            window.location.href = "/admin-dashboard/";
+                        } else {
+                            window.location.href = "/dashboard/";
+                        }
+                    }, 800);
+                } else {
+                    showToast(data.detail || "Invalid login credentials. Please try again.", "error");
+                    submitBtn.disabled = false;
+                    spinner.classList.add("d-none");
+                }
+            } catch (error) {
+                showToast("Network error. Could not connect to authentication services.", "error");
+                submitBtn.disabled = false;
+                spinner.classList.add("d-none");
+            }
+        });
+    });
+</script>
+{% endblock %}

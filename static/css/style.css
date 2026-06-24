@@ -1,0 +1,436 @@
+/* Google Fonts Outfit Import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    /* Color Palette - Dark Mode Defaults */
+    --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    
+    --glass-blur: blur(16px);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --transition-speed: 0.3s;
+
+    --nav-bg: rgba(15, 23, 42, 0.2);
+    --sidebar-bg: rgba(15, 23, 42, 0.3);
+    --btn-close-filter: invert(1) grayscale(1) brightness(2);
+}
+
+[data-theme="light"] {
+    /* Color Palette - Light Mode Override */
+    --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    --card-bg: rgba(255, 255, 255, 0.65);
+    --card-border: rgba(0, 0, 0, 0.06);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --accent-glow: rgba(79, 70, 229, 0.1);
+    
+    --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+
+    --nav-bg: rgba(255, 255, 255, 0.45);
+    --sidebar-bg: rgba(255, 255, 255, 0.45);
+    --btn-close-filter: none;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+    transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="light"] .glass-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(79, 70, 229, 0.15);
+}
+
+/* Typography and Gradients */
+.gradient-text {
+    background: linear-gradient(90deg, #818cf8 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+/* Side Navigation */
+.sidebar {
+    min-height: 100vh;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--card-border);
+    transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+
+.sidebar .nav-link {
+    color: var(--text-secondary);
+    border-radius: 8px;
+    margin: 4px 16px;
+    padding: 12px 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: var(--text-primary);
+    background: rgba(99, 102, 241, 0.15);
+    border-left: 4px solid var(--primary);
+}
+
+/* Buttons */
+.btn-glass-primary {
+    background: var(--primary);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-glass-primary:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 0 15px var(--primary);
+    transform: scale(1.02);
+}
+
+/* Timeline UI */
+.timeline-container {
+    position: relative;
+    padding-left: 32px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 24px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    border: 2px solid var(--bg-gradient);
+    z-index: 2;
+}
+
+.timeline-item.completed::before {
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 20px;
+    width: 2px;
+    height: 100%;
+    background: var(--card-border);
+    z-index: 1;
+}
+
+.timeline-item:last-child::after {
+    display: none;
+}
+
+/* Chatbot Floating Widget */
+.chatbot-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 350px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.chatbot-widget.active {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.chatbot-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 998;
+    color: white;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.7);
+}
+
+.chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    font-size: 14px;
+}
+
+.chat-message.user {
+    background: var(--primary);
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 2px;
+}
+
+.chat-message.bot {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+[data-theme="light"] .chat-message.bot {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+/* Skeleton Screens */
+.skeleton-box {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+[data-theme="light"] .skeleton-box {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.05) 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Toast Notifications Container */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+
+/* Table Styling overrides */
+.table {
+    --bs-table-bg: transparent !important;
+    --bs-table-color: var(--text-primary) !important;
+    --bs-table-border-color: var(--card-border) !important;
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+.table > :not(caption) > * > * {
+    background-color: transparent !important;
+    color: inherit !important;
+    border-bottom-color: var(--card-border) !important;
+}
+
+/* Form Styling overrides */
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.2s ease;
+}
+
+[data-theme="light"] .form-control, [data-theme="light"] .form-select {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.form-control::placeholder {
+    color: #94a3b8 !important; /* Explicitly visible placeholder in dark mode */
+    opacity: 0.6 !important;
+}
+
+[data-theme="light"] .form-control::placeholder {
+    color: #64748b !important; /* Visible placeholder in light mode */
+    opacity: 0.6 !important;
+}
+
+.form-select option {
+    background-color: #111827 !important; /* Dark background for options in dark mode */
+    color: #f8fafc !important;             /* White text for options in dark mode */
+}
+
+[data-theme="light"] .form-select option {
+    background-color: #ffffff !important; /* Light background for options in light mode */
+    color: #0f172a !important;             /* Dark text for options in light mode */
+}
+
+
+.form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 10px var(--accent-glow) !important;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+}
+
+/* Micro-animations */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Global Text Transitions for Theme Changes */
+h1, h2, h3, h4, h5, h6, p, span, td, th, label, div, a, i, small, strong, em, button, input, select, textarea {
+    transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+
+/* Theme-Aware Text Classes (Replaces text-light / text-white where color needs to transition) */
+.text-theme-primary {
+    color: var(--text-primary) !important;
+}
+
+.text-theme-secondary, .text-secondary, .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* Modal Close Buttons Theme filter */
+.modal-header .btn-close,
+.modal-header .btn-close-white {
+    filter: var(--btn-close-filter) !important;
+    transition: filter var(--transition-speed) ease;
+}
+
+/* Input Group Icon Spans & Buttons */
+.input-group-text {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--card-border) !important;
+    color: var(--text-secondary) !important;
+    transition: all var(--transition-speed) ease;
+}
+
+[data-theme="light"] .input-group-text {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.input-group .btn {
+    border: 1px solid var(--card-border) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-secondary) !important;
+    transition: all var(--transition-speed) ease;
+}
+
+[data-theme="light"] .input-group .btn {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Theme Toggle Button */
+#theme-btn {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--card-border) !important;
+    transition: all var(--transition-speed) ease;
+}
+
+[data-theme="light"] #theme-btn {
+    background: rgba(0, 0, 0, 0.04) !important;
+}

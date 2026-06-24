@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Email – CampusStay{% endblock %}
+
+{% block content %}
+<div class="row align-items-center justify-content-center min-vh-80 py-5 slide-up">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="glass-card">
+            <h2 class="fw-bold mb-3 text-center"><i class="fa-solid fa-envelope-circle-check text-primary me-2"></i>Email Verification</h2>
+            <p class="text-secondary text-center mb-4">Please verify your email address to submit your application for warden review</p>
+            
+            <form id="verify-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="student_id_display" class="form-label">Student ID</label>
+                    <input type="text" class="form-control" id="student_id_display" readonly>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="code" class="form-label">Verification Code (Sent to Email)</label>
+                    <div class="input-group">
+                        <span class="input-group-text border-end-0"><i class="fa-solid fa-key"></i></span>
+                        <input type="text" class="form-control border-start-0 text-center fw-bold" id="code" required placeholder="Enter 6-digit code" maxlength="6">
+                    </div>
+                    <small class="text-muted d-block mt-2 text-center">For simulation, you can enter any 6 digits (e.g. 123456).</small>
+                </div>
+                
+                <button type="submit" class="btn btn-glass-primary w-100 py-3 d-flex align-items-center justify-content-center" id="verify-submit-btn">
+                    <span>Verify Code</span>
+                    <div class="spinner-border spinner-border-sm text-light ms-2 d-none" id="verify-spinner" role="status"></div>
+                </button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'page_login' %}" class="text-primary text-decoration-none fw-semibold">Back to Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sidebar = document.getElementById("sidebar-panel");
+        const main = document.getElementById("main-container");
+        if (sidebar) sidebar.classList.add("d-none");
+        if (main) main.className = "col-12 p-4 main-content";
+
+        // Extract student_id from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get("student_id") || "";
+        
+        document.getElementById("student_id_display").value = studentId;
+
+        const form = document.getElementById("verify-form");
+        const submitBtn = document.getElementById("verify-submit-btn");
+        const spinner = document.getElementById("verify-spinner");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            spinner.classList.remove("d-none");
+            
+            const code = document.getElementById("code").value.trim();
+
+            try {
+                const response = await fetch("/api/auth/verify-email/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ student_id: studentId, code: code })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showToast(data.message, "success");
+                    setTimeout(() => {
+                        window.location.href = "/login/";
+                    }, 1200);
+                } else {
+                    showToast(data.detail || "Invalid code.", "error");
+                }
+            } catch (error) {
+                showToast("Network error. Verification failed.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add("d-none");
+            }
+        });
+    });
+</script>
+{% endblock %}
