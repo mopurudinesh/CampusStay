@@ -9,20 +9,19 @@ class Command(BaseCommand):
         User = get_user_model()
 
         # 1. Create Admin
-        admin_user, created = User.objects.get_or_create(
-            username='admin',
-            defaults={
-                'email': 'admin@campusstay.com',
-                'role': 'ADMIN',
-                'is_active': True
-            }
-        )
-        if created:
+        admin_exists = User.objects.filter(username='admin').exists() or User.objects.filter(email='admin@campusstay.com').exists()
+        if not admin_exists:
+            admin_user = User.objects.create_user(
+                username='admin',
+                email='admin@campusstay.com',
+                role='ADMIN',
+                is_active=True
+            )
             admin_user.set_password('Admin@12345')
             admin_user.save()
             self.stdout.write(self.style.SUCCESS('Admin user created successfully.'))
         else:
-            self.stdout.write('Admin user already exists.')
+            self.stdout.write('Admin user or admin email already exists.')
 
         # 2. Create Blocks
         blocks = {}
@@ -100,18 +99,28 @@ class Command(BaseCommand):
         ]
 
         for s in students_data:
-            user, created = User.objects.get_or_create(
-                username=s['username'],
-                defaults={
-                    'email': s['email'],
-                    'role': 'STUDENT',
-                    'is_active': True
-                }
-            )
-            if created:
+            # Find existing user by username or email
+            user = User.objects.filter(username=s['username']).first()
+            if not user:
+                user = User.objects.filter(email=s['email']).first()
+
+            if not user:
+                # Create user if neither username nor email exists
+                user = User.objects.create_user(
+                    username=s['username'],
+                    email=s['email'],
+                    role='STUDENT',
+                    is_active=True
+                )
                 user.set_password(s['password'])
                 user.save()
-                
+                self.stdout.write(self.style.SUCCESS(f"User {s['username']} created."))
+            else:
+                self.stdout.write(f"User {s['username']} (or email {s['email']}) already exists.")
+
+            # Check if StudentProfile already exists by student_id or user relation
+            profile_exists = StudentProfile.objects.filter(student_id=s['student_id']).exists() or StudentProfile.objects.filter(user=user).exists()
+            if not profile_exists:
                 StudentProfile.objects.create(
                     user=user,
                     full_name=s['full_name'],
@@ -125,6 +134,6 @@ class Command(BaseCommand):
                     address=s['address'],
                     parent_contact=s['parent_contact']
                 )
-                self.stdout.write(self.style.SUCCESS(f"Student user and profile created for {s['username']}."))
+                self.stdout.write(self.style.SUCCESS(f"StudentProfile created for {s['username']}."))
             else:
-                self.stdout.write(f"Student user {s['username']} already exists.")
+                self.stdout.write(f"StudentProfile for {s['username']} (or student_id {s['student_id']}) already exists.")
